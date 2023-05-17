@@ -6,7 +6,7 @@ data class Point2D(val x: Double, val y: Double) {
   }
 
   operator fun plus(v: Vector2D): Point2D {
-    return Point2D(v.dx + this.x, v.dy + this.y);
+    return Point2D(v.dx + this.x, v.dy + this.y)
   }
 
   override fun toString(): String {
@@ -18,20 +18,20 @@ data class Point2D(val x: Double, val y: Double) {
   }
 
   fun impactVector(p: Point2D): Vector2D {
-    return Vector2D(this.x - p.x, this.y - p.y)
+    return Vector2D(p.x - this.x, p.y - this.y)
   }
 
   fun impactDirection(p: Point2D): Vector2D {
-    val v = impactDirection(p)
-    return v/v.magnitude
+    val v = impactVector(p)
+    return v / v.magnitude
   }
 
   fun contactVector(p: Point2D): Vector2D {
-    return impactVector(p)
+    return impactVector(p).normal
   }
 
   fun contactDirection(p: Point2D): Vector2D {
-    return impactDirection(p)
+    return impactDirection(p).normal
   }
 
   fun distance(p: Point2D): Double {
