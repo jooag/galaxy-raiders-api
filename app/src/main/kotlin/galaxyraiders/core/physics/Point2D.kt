@@ -2,15 +2,15 @@ package galaxyraiders.core.physics
 
 data class Point2D(val x: Double, val y: Double) {
   operator fun plus(p: Point2D): Point2D {
-    return Point2D(p.x + this.x, p.y, this.y)
+    return Point2D(p.x + this.x, p.y + this.y)
   }
 
   operator fun plus(v: Vector2D): Point2D {
-    return Point2D(v.dx + this.x, v.dy, this.y);return INVALID_POINT
+    return Point2D(v.dx + this.x, v.dy + this.y);
   }
 
   override fun toString(): String {
-    return "Point2D(x=$x, y=$y)"
+    return "Point2D(x=${this.x}, y=$${this.y})"
   }
 
   fun toVector(): Vector2D {
