@@ -15,14 +15,18 @@ data class Vector2D(val dx: Double, val dy: Double) {
     get() = sqrt(this.dx * this.dx + this.dy * this.dy)
 
   val radiant: Double    
-    get() = atan2(this.dy, this.dx) val degree: Double
+    get() = atan2(this.dy, this.dx) 
+    
+  val degree: Double
     get(){
       val halfRound = 180
-      this.radiant * halfRound / PI
+      return this.radiant * halfRound / PI
     }
 
   val unit: Vector2D
-    get() = this / this.magnitude val normal: Vector2D
+    get() = this / this.magnitude 
+    
+  val normal: Vector2D
     get() = Vector2D(this.dy, -this.dx) / this.magnitude
 
   operator fun times(scalar: Double): Vector2D {
