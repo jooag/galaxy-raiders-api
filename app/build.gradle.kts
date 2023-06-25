@@ -11,7 +11,7 @@ import com.adarshr.gradle.testlogger.theme.ThemeType
 plugins {
   // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
   id("org.jetbrains.kotlin.jvm") version "1.6.20"
-
+  id ("org.jetbrains.kotlin.plugin.serialization") version "1.6.20"
   // Apply the application plugin to add support for building a CLI application in Java.
   application
 
@@ -42,6 +42,9 @@ repositories {
 dependencies {
   // Align versions of all Kotlin components
   implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
+
+  
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
 
   // Use the Kotlin JDK 8 standard library.
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")

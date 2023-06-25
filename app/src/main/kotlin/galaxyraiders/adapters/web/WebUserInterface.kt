@@ -32,7 +32,10 @@ class WebUserInterface : UserInterface {
     Javalin.create {
       it.enableCorsForOrigin(WebUserInterfaceConfig.allowedOrigins)
     }.routes {
-      get("/exit") { System.exit(0) }
+      get("/exit") { 
+        
+        System.exit(0) 
+      }
 
       // Register routers
       this.routers.forEach { path("v1/" + it.path, it.endpoints) }

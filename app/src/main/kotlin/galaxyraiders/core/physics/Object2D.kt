@@ -64,7 +64,9 @@ open class Object2D(
       coefficientRestitution >= 0.0 && coefficientRestitution <= 1.0,
       { "Coefficient of restitution must be in the interval [0.0, 1.0]" }
     )
-
+    if (target.mass <= 0.001 || this.mass <= 0.001){
+      return
+    }
     val deltaVelocity = calculateImpactVelocityVariation(target)
 
     val impactImpulse = calculateImpactImpulse(target, coefficientRestitution, deltaVelocity)

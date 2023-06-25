@@ -5,6 +5,7 @@ import galaxyraiders.ports.RandomGenerator
 import galaxyraiders.ports.ui.Controller
 import galaxyraiders.ports.ui.Controller.PlayerCommand
 import galaxyraiders.ports.ui.Visualizer
+import galaxyraiders.core.score.ScoreHandler
 import kotlin.system.measureTimeMillis
 
 const val MILLISECONDS_PER_SECOND: Int = 1000
@@ -17,6 +18,7 @@ object GameEngineConfig {
   val spaceFieldHeight = config.get<Int>("SPACEFIELD_HEIGHT")
   val asteroidProbability = config.get<Double>("ASTEROID_PROBABILITY")
   val coefficientRestitution = config.get<Double>("COEFFICIENT_RESTITUTION")
+  
 
   val msPerFrame: Int = MILLISECONDS_PER_SECOND / this.frameRate
 }
@@ -25,15 +27,16 @@ object GameEngineConfig {
 class GameEngine(
   val generator: RandomGenerator,
   val controller: Controller,
-  val visualizer: Visualizer,
+  val visualizer: Visualizer,  
 ) {
   val field = SpaceField(
     width = GameEngineConfig.spaceFieldWidth,
     height = GameEngineConfig.spaceFieldHeight,
     generator = generator
   )
-
+  val score_handler = ScoreHandler()
   var playing = true
+  var score = 0
 
   fun execute() {
     while (true) {
@@ -76,6 +79,7 @@ class GameEngine(
     }
   }
 
+  
   fun updateSpaceObjects() {
     if (!this.playing) return
     this.handleCollisions()
@@ -89,6 +93,12 @@ class GameEngine(
         (first, second) ->
       if (first.impacts(second)) {
         first.collideWith(second, GameEngineConfig.coefficientRestitution)
+        if ((first is Asteroid && second is Missile) || (first is Missile && second is Asteroid)){
+          val asteroid : SpaceObject = if (first is Asteroid) (first) else (second)
+          this.field.generateExplosion(asteroid.center)
+          this.field.removeAsteroid(asteroid as Asteroid)
+          this.score_handler.updateScores(asteroid as Asteroid)
+        }
       }
     }
   }
@@ -102,6 +112,7 @@ class GameEngine(
   fun trimSpaceObjects() {
     this.field.trimAsteroids()
     this.field.trimMissiles()
+    this.field.trimExplosions()
   }
 
   fun generateAsteroids() {

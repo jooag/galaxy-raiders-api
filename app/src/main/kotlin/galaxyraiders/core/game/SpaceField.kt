@@ -23,6 +23,9 @@ object SpaceFieldConfig {
   val asteroidMinMass = config.get<Int>("ASTEROID_MIN_MASS")
   val asteroidMaxMass = config.get<Int>("ASTEROID_MAX_MASS")
   val asteroidMassMultiplier = config.get<Double>("ASTEROID_MASS_MULTIPLIER")
+  
+  val explosionDuration = config.get<Long>("EXPLOSION_DURATION")
+  val explosionRadius = config.get<Double>("EXPLOSION_RADIUS")
 }
 
 @Suppress("TooManyFunctions")
@@ -37,9 +40,12 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
 
   var asteroids: List<Asteroid> = emptyList()
     private set
+  
+  var explosions: List<Explosion> = emptyList()
+    private set
 
   val spaceObjects: List<SpaceObject>
-    get() = listOf(this.ship) + this.missiles + this.asteroids
+    get() = listOf(this.ship) + this.missiles + this.asteroids + this.explosions
 
   fun moveShip() {
     this.ship.move(boundaryX, boundaryY)
@@ -61,6 +67,14 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
     this.asteroids += this.createAsteroidWithRandomProperties()
   }
 
+  fun removeAsteroid(asteroid: Asteroid){
+    this.asteroids -= asteroid
+  }
+
+  fun generateExplosion(center: Point2D) {
+    this.explosions += this.createExplosion(center)
+  }
+
   fun trimMissiles() {
     this.missiles = this.missiles.filter {
       it.inBoundaries(this.boundaryX, this.boundaryY)
@@ -70,6 +84,13 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
   fun trimAsteroids() {
     this.asteroids = this.asteroids.filter {
       it.inBoundaries(this.boundaryX, this.boundaryY)
+    }
+  }
+
+
+  fun trimExplosions() {
+    this.explosions = this.explosions.filter {
+      !it.isOver()
     }
   }
 
@@ -98,6 +119,16 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
       mass = SpaceFieldConfig.missileMass,
     )
   }
+
+  private fun createExplosion(center: Point2D): Explosion {
+    return Explosion(
+      initialPosition = center,
+      initialVelocity = Vector2D(0.0, 0.0),
+      radius=SpaceFieldConfig.explosionRadius,
+      duration=SpaceFieldConfig.explosionDuration
+    )
+  }
+
 
   private fun defineMissilePosition(missileRadius: Double): Point2D {
     return ship.center + Vector2D(dx = 0.0, dy = ship.radius + missileRadius + SpaceFieldConfig.missileDistanceFromShip)
