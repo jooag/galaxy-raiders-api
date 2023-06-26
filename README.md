@@ -80,6 +80,7 @@ To execute any task, run:
 ```bash
 docker compose --profile dev run --rm demo gradle --no-daemon {task}
 ```
+Scoreboard and Leaderboard files are generated in app/src/main/kotlin/galaxyraiders/core/score/
 
 [1]: https://uspdigital.usp.br/jupiterweb/obterDisciplina?sgldis=MAC0218
 [2]: https://gradle.org

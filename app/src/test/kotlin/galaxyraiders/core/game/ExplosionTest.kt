@@ -30,5 +30,4 @@ class ExplosionTest {
   fun `it shows the type Asteroid when converted to String `() {
     assertTrue(explosion.toString().contains("Explosion"))
   }
-
 }

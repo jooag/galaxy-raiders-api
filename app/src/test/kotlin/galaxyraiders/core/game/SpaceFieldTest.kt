@@ -260,6 +260,14 @@ class SpaceFieldTest {
     assertEquals(numAsteroids + 1, spaceField.asteroids.size)
   }
 
+  @Test
+  fun `it can generate a new explosion`() {
+    val numExplosions = spaceField.explosions.size
+    spaceField.generateExplosion(Point2D(0.0, 0.0))
+
+    assertEquals(numExplosions + 1, spaceField.explosions.size)
+  }
+
   @ParameterizedTest(name = "({0})")
   @MethodSource("provideSpaceFieldWithCornerCaseGeneratorArguments")
   fun `it generates a new asteroid in a random horizontal position at the top of the field `(spaceField: SpaceField) {
@@ -284,8 +292,8 @@ class SpaceFieldTest {
       "SpaceField creates a new asteroid with restrictions",
       { assertTrue(asteroid.velocity.dx >= -0.5) },
       { assertTrue(asteroid.velocity.dx <= 0.5) },
-      { assertTrue(asteroid.velocity.dy >= -2.0) },
-      { assertTrue(asteroid.velocity.dy <= -1.0) },
+      { assertTrue(asteroid.velocity.dy >= -1.0) },
+      { assertTrue(asteroid.velocity.dy <= -0.25) },
     )
   }
 
